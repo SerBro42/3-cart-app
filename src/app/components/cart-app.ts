@@ -2,15 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { Product } from '../models/product';
 import { ProductService } from '../services/product';
 import { CatalogueComponent } from './catalogue/catalogue';
+import { CartComponent } from './cart/cart';
+import { CartItem } from '../models/cartItem';
 
 @Component({
   selector: 'cart-app',
-  imports: [CatalogueComponent],
+  imports: [CatalogueComponent, CartComponent],
   templateUrl: './cart-app.html'
 })
 export class CartAppComponent implements OnInit{
 
   products: Product[] = [];
+
+  items: CartItem[] = [];
 
   constructor(private service: ProductService) {
 
