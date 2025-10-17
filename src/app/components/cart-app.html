@@ -1,4 +1,9 @@
-<h2>Shopping cart</h2>
+<h2>Product catalogue app</h2>
 
 <app-catalogue [products]="products" />
-<app-cart />
+
+@if (items.length > 0) {
+  <app-cart [items] = "items"/>
+} @else {
+  <div class="alert alert-warning">The shopping cart is empty</div>
+}

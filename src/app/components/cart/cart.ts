@@ -11,4 +11,5 @@ export class CartComponent {
 
   @Input() items: CartItem[] = [];
 
+  //No items are being imported, and so, none are shown
 }
