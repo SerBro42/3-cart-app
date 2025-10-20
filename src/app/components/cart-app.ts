@@ -26,6 +26,7 @@ export class CartAppComponent implements OnInit{
   //and populates our empty Product array with products returned by the service
   ngOnInit(): void {
     this.products = this.service.findAll();
+    this.items = JSON.parse(sessionStorage.getItem('cart')!) || [];
     this.calculateTotal();
   }
 
@@ -49,18 +50,26 @@ export class CartAppComponent implements OnInit{
       this.items = [... this.items, { product: {... product}, quantity: 1 }];
     }
     this.calculateTotal();
+    this.saveSession();
   }
 
   //The filter() function creates a new instance of the array
   onDeleteCart(id: number): void {
     this.items = this.items.filter( item => item.product.id !== id );
     this.calculateTotal();
+    this.saveSession();
   }
 
   //The reduce() funcition reduces a data flux into a single variable. In this case, we use a 'for' to iterate
   //through all the items and their price value, and return a single variable that is the sum of all previous ones.
   calculateTotal(): void {
     this.total = this.items.reduce( (accumulator, item) => accumulator + item.quantity*item.product.price, 0);
+  }
+
+  //We save the array of products in our session storage. Challenge: data are saved in session storage is saved in form of
+  // as String, and our shopping cart list is an array (object). We must transform that object into a String.
+  saveSession(): void {
+    sessionStorage.setItem('cart', JSON.stringify(this.items));
   }
 
 }
