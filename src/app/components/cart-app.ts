@@ -28,8 +28,23 @@ export class CartAppComponent implements OnInit{
 
   //Method that finally adds the new product to the existing array of Products, which is the cart
   // (called 'items' in this case).
+  //If the product exists already, increases the quantity by 1. Otherwise, it is added to the list.
   onAddCart(product: Product) {
-    this.items = [... this.items, { product: {... product}, quantity: 1 }];
+    const hasItem = this.items.find(item => item.product.id === product.id);
+    if(hasItem) {
+      //The map() function returns a new instance of the array, but modified
+      this.items = this.items.map(item => {
+        if(item.product.id === product.id) {
+          return {
+            ...item,
+            quantity: item.quantity + 1
+          }
+        }
+        return item;
+      })
+    } else {
+      this.items = [... this.items, { product: {... product}, quantity: 1 }];
+    }
   }
 
 }
