@@ -4,10 +4,11 @@ import { ProductService } from '../services/product';
 import { CatalogueComponent } from './catalogue/catalogue';
 import { CartComponent } from './cart/cart';
 import { CartItem } from '../models/cartItem';
+import { NavbarComponent } from './navbar/navbar';
 
 @Component({
   selector: 'cart-app',
-  imports: [CatalogueComponent, CartComponent],
+  imports: [CatalogueComponent, CartComponent, NavbarComponent],
   templateUrl: './cart-app.html'
 })
 export class CartAppComponent implements OnInit{
@@ -28,7 +29,7 @@ export class CartAppComponent implements OnInit{
   //and populates our empty Product array with products returned by the service
   ngOnInit(): void {
     this.products = this.service.findAll();
-    this.items = JSON.parse(sessionStorage.getItem('cart')!) || [];
+    this.items = JSON.parse(sessionStorage.getItem('cart') || '[]');
     this.calculateTotal();
   }
 

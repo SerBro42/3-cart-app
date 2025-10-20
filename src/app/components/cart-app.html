@@ -1,17 +1,20 @@
-<h2>Product catalogue app</h2>
-<button class="btn btn-info btn-sm" (click)="openCart()">show cart ({{items.length}}) </button>
-<div class="row">
-  <div [className]="showCart? 'col-9': 'col'">
-    <app-catalogue [products]="products" (productEventEmitter)="onAddCart($event)" />
-  </div>
-  @if (showCart) {
-    <div class="col-3">
-      <button class="btn btn-danger float-end" (click)="openCart()">X</button>
-      @if (items.length > 0) {
-        <app-cart [items] = "items" [total] = "total" (idProductEventEmitter)="onDeleteCart($event)" />
-      } @else {
-        <div class="alert alert-warning">The shopping cart is empty</div>
-      }
+<app-navbar [items]="items" (openEventEmitter)="openCart()" />
+
+<div class="container my-4">
+  <h2>Product catalogue app</h2>
+  <div class="row">
+    <div [className]="showCart? 'col-9': 'col'">
+      <app-catalogue [products]="products" (productEventEmitter)="onAddCart($event)" />
     </div>
-  }
+    @if (showCart) {
+      <div class="col-3">
+        <button class="btn btn-danger float-end" (click)="openCart()">X</button>
+        @if (items.length > 0) {
+          <app-cart [items] = "items" [total] = "total" (idProductEventEmitter)="onDeleteCart($event)" />
+        } @else {
+          <div class="alert alert-warning">The shopping cart is empty</div>
+        }
+      </div>
+    }
+  </div>
 </div>
