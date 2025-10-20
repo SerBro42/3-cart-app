@@ -18,6 +18,8 @@ export class CartAppComponent implements OnInit{
 
   total: number = 0;
 
+  showCart: boolean = false;
+
   constructor(private service: ProductService) {
 
   }
@@ -70,6 +72,11 @@ export class CartAppComponent implements OnInit{
   // as String, and our shopping cart list is an array (object). We must transform that object into a String.
   saveSession(): void {
     sessionStorage.setItem('cart', JSON.stringify(this.items));
+  }
+
+  //This clever trick turns a boolean variable to its opposite.
+  openCart(): void {
+    this.showCart = !this.showCart;
   }
 
 }
