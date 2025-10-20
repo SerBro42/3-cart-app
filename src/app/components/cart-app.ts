@@ -29,7 +29,7 @@ export class CartAppComponent implements OnInit{
   //Method that finally adds the new product to the existing array of Products, which is the cart
   // (called 'items' in this case).
   //If the product exists already, increases the quantity by 1. Otherwise, it is added to the list.
-  onAddCart(product: Product) {
+  onAddCart(product: Product): void {
     const hasItem = this.items.find(item => item.product.id === product.id);
     if(hasItem) {
       //The map() function returns a new instance of the array, but modified
@@ -45,6 +45,11 @@ export class CartAppComponent implements OnInit{
     } else {
       this.items = [... this.items, { product: {... product}, quantity: 1 }];
     }
+  }
+
+  //The filter() function creates a new instance of the array
+  onDeleteCart(id: number): void {
+    this.items = this.items.filter( item => item.product.id !=id );
   }
 
 }
