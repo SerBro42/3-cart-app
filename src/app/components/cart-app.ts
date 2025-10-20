@@ -16,6 +16,8 @@ export class CartAppComponent implements OnInit{
 
   items: CartItem[] = [];
 
+  total: number = 0;
+
   constructor(private service: ProductService) {
 
   }
@@ -24,6 +26,7 @@ export class CartAppComponent implements OnInit{
   //and populates our empty Product array with products returned by the service
   ngOnInit(): void {
     this.products = this.service.findAll();
+    this.calculateTotal();
   }
 
   //Method that finally adds the new product to the existing array of Products, which is the cart
@@ -45,11 +48,19 @@ export class CartAppComponent implements OnInit{
     } else {
       this.items = [... this.items, { product: {... product}, quantity: 1 }];
     }
+    this.calculateTotal();
   }
 
   //The filter() function creates a new instance of the array
   onDeleteCart(id: number): void {
-    this.items = this.items.filter( item => item.product.id !=id );
+    this.items = this.items.filter( item => item.product.id !== id );
+    this.calculateTotal();
+  }
+
+  //The reduce() funcition reduces a data flux into a single variable. In this case, we use a 'for' to iterate
+  //through all the items and their price value, and return a single variable that is the sum of all previous ones.
+  calculateTotal(): void {
+    this.total = this.items.reduce( (accumulator, item) => accumulator + item.quantity*item.product.price, 0);
   }
 
 }
