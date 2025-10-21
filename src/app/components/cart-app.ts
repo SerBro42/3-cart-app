@@ -17,7 +17,7 @@ export class CartAppComponent implements OnInit {
 
   items: CartItem[] = [];
 
-  total: number = 0;
+  // total: number = 0;
 
   showCart: boolean = false;
 
@@ -30,7 +30,7 @@ export class CartAppComponent implements OnInit {
   ngOnInit(): void {
     this.products = this.service.findAll();
     this.items = JSON.parse(sessionStorage.getItem('cart') || '[]');
-    this.calculateTotal();
+    // this.calculateTotal();
   }
 
   //Method that finally adds the new product to the existing array of Products, which is the cart
@@ -52,28 +52,34 @@ export class CartAppComponent implements OnInit {
     } else {
       this.items = [... this.items, { product: { ...product }, quantity: 1 }];
     }
-    this.calculateTotal();
-    this.saveSession();
+    // this.calculateTotal();
+    // this.saveSession();
   }
 
   //The filter() function creates a new instance of the array
+  //We need to explicitly clear the object 'cart' from sessionStorage after reaching length=0, because
+  //otherwise, if we delete the last element and refresh the page, the last element of the list before deletion persists. The reason
+  //being that the initial state of the object is [], and so leaving it at [] is not considered as a 'change'.
   onDeleteCart(id: number): void {
     this.items = this.items.filter(item => item.product.id !== id);
-    this.calculateTotal();
-    this.saveSession();
+    if(this.items.length == 0) {
+      sessionStorage.removeItem('cart');
+    }
+    // this.calculateTotal();
+    // this.saveSession();
   }
 
-  //The reduce() funcition reduces a data flux into a single variable. In this case, we use a 'for' to iterate
-  //through all the items and their price value, and return a single variable that is the sum of all previous ones.
-  calculateTotal(): void {
-    this.total = this.items.reduce((accumulator, item) => accumulator + item.quantity * item.product.price, 0);
-  }
+  // //The reduce() funcition reduces a data flux into a single variable. In this case, we use a 'for' to iterate
+  // //through all the items and their price value, and return a single variable that is the sum of all previous ones.
+  // calculateTotal(): void {
+  //   this.total = this.items.reduce((accumulator, item) => accumulator + item.quantity * item.product.price, 0);
+  // }
 
-  //We save the array of products in our session storage. Challenge: data are saved in session storage is saved in form of
-  // as String, and our shopping cart list is an array (object). We must transform that object into a String.
-  saveSession(): void {
-    sessionStorage.setItem('cart', JSON.stringify(this.items));
-  }
+  // //We save the array of products in our session storage. Challenge: data are saved in session storage is saved in form of
+  // // as String, and our shopping cart list is an array (object). We must transform that object into a String.
+  // saveSession(): void {
+  //   sessionStorage.setItem('cart', JSON.stringify(this.items));
+  // }
 
   //This clever trick turns a boolean variable to its opposite.
   //Name changed from 'open' to 'openClose' for more clarity.
