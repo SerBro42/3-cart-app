@@ -2,16 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { Product } from '../models/product';
 import { ProductService } from '../services/product';
 import { CatalogueComponent } from './catalogue/catalogue';
-import { CartComponent } from './cart/cart';
 import { CartItem } from '../models/cartItem';
 import { NavbarComponent } from './navbar/navbar';
+import { CartModalComponent } from './cart-modal/cart-modal';
 
 @Component({
   selector: 'cart-app',
-  imports: [CatalogueComponent, CartComponent, NavbarComponent],
+  imports: [CatalogueComponent, CartModalComponent, NavbarComponent],
   templateUrl: './cart-app.html'
 })
-export class CartAppComponent implements OnInit{
+export class CartAppComponent implements OnInit {
 
   products: Product[] = [];
 
@@ -38,10 +38,10 @@ export class CartAppComponent implements OnInit{
   //If the product exists already, increases the quantity by 1. Otherwise, it is added to the list.
   onAddCart(product: Product): void {
     const hasItem = this.items.find(item => item.product.id === product.id);
-    if(hasItem) {
+    if (hasItem) {
       //The map() function returns a new instance of the array, but modified
       this.items = this.items.map(item => {
-        if(item.product.id === product.id) {
+        if (item.product.id === product.id) {
           return {
             ...item,
             quantity: item.quantity + 1
@@ -50,7 +50,7 @@ export class CartAppComponent implements OnInit{
         return item;
       })
     } else {
-      this.items = [... this.items, { product: {... product}, quantity: 1 }];
+      this.items = [... this.items, { product: { ...product }, quantity: 1 }];
     }
     this.calculateTotal();
     this.saveSession();
@@ -58,7 +58,7 @@ export class CartAppComponent implements OnInit{
 
   //The filter() function creates a new instance of the array
   onDeleteCart(id: number): void {
-    this.items = this.items.filter( item => item.product.id !== id );
+    this.items = this.items.filter(item => item.product.id !== id);
     this.calculateTotal();
     this.saveSession();
   }
@@ -66,7 +66,7 @@ export class CartAppComponent implements OnInit{
   //The reduce() funcition reduces a data flux into a single variable. In this case, we use a 'for' to iterate
   //through all the items and their price value, and return a single variable that is the sum of all previous ones.
   calculateTotal(): void {
-    this.total = this.items.reduce( (accumulator, item) => accumulator + item.quantity*item.product.price, 0);
+    this.total = this.items.reduce((accumulator, item) => accumulator + item.quantity * item.product.price, 0);
   }
 
   //We save the array of products in our session storage. Challenge: data are saved in session storage is saved in form of
@@ -76,7 +76,8 @@ export class CartAppComponent implements OnInit{
   }
 
   //This clever trick turns a boolean variable to its opposite.
-  openCart(): void {
+  //Name changed from 'open' to 'openClose' for more clarity.
+  openCloseCart(): void {
     this.showCart = !this.showCart;
   }
 

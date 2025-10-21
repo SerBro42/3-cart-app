@@ -1,30 +1,11 @@
-<app-navbar [items]="items" (openEventEmitter)="openCart()" />
+<app-navbar [items]="items" (openEventEmitter)="openCloseCart()" />
 
 <div class="container my-4">
   <h2>Product catalogue app</h2>
   <app-catalogue [products]="products" (productEventEmitter)="onAddCart($event)" />
 
   @if (showCart) {
-
-  <div class="open-modal animation fadeIn">
-    <div class="modal" style="display: block;" tabindex="-1">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Shopping Cart</h5>
-          </div>
-          <div class="modal-body">
-            @if (items.length > 0) {
-              <app-cart [items]="items" [total]="total" (idProductEventEmitter)="onDeleteCart($event)" />
-            } @else {
-              <div class="alert alert-warning">The shopping cart is empty</div>
-            }
-            <button class="btn btn-danger float-end" (click)="openCart()">X</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <app-cart-modal [items]="items" [total]="total" (idProductEventEmitter)="onDeleteCart($event)" (closeEventEmitter)="openCloseCart()" />
 
   }
 </div>
