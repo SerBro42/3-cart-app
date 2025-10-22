@@ -24,7 +24,7 @@ export class CartComponent {
   //instead.
   constructor(private SharingDataService: SharingDataService, private router: Router) {
     this.items = this.router.currentNavigation()?.extras.state!['items'];
-    this.total = this.router.currentNavigation()?.extras.state!['totla'];
+    this.total = this.router.currentNavigation()?.extras.state!['total'];
 
   }
 

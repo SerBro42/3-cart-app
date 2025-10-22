@@ -4,7 +4,7 @@ import { ProductService } from '../services/product';
 import { CatalogueComponent } from './catalogue/catalogue';
 import { CartItem } from '../models/cartItem';
 import { NavbarComponent } from './navbar/navbar';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { SharingDataService } from '../services/sharing-data';
 
 @Component({
@@ -20,9 +20,10 @@ export class CartAppComponent implements OnInit {
 
   total: number = 0;
 
-  constructor(private SharingDataService: SharingDataService, private service: ProductService) {
-
-  }
+  constructor(
+    private router: Router,
+    private SharingDataService: SharingDataService,
+    private service: ProductService) { }
 
   //When the application gets initialised, the product service that was previously initialised gets called
   //and populates our empty Product array with products returned by the service
@@ -58,6 +59,9 @@ export class CartAppComponent implements OnInit {
       }
       this.calculateTotal();
       this.saveSession();
+      this.router.navigate(['/cart'], {
+        state: { items: this.items, total: this.total }
+      })
     });
   }
 
@@ -75,7 +79,14 @@ export class CartAppComponent implements OnInit {
       }
       this.calculateTotal();
       this.saveSession();
-    });
+
+      this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+        //This does NOT refresh the window after deleting
+        this.router.navigate(['/cart'], {
+          state: { items: this.items, total: this.total }
+        })
+      })
+    })
   }
 
   // //The reduce() funcition reduces a data flux into a single variable. In this case, we use a 'for' to iterate
