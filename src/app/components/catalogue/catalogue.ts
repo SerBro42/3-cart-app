@@ -3,6 +3,7 @@ import { Product } from '../../models/product';
 import { ProductCardComponent } from "../product-card/product-card";
 import { products } from '../../data/product.data';
 import { Router } from '@angular/router';
+import { SharingDataService } from '../../services/sharing-data';
 
 @Component({
   selector: 'app-catalogue',
@@ -15,16 +16,12 @@ export class CatalogueComponent {
   //Now this info comes from a router
   products!: Product[];
 
-  //This sends information to a parent component (cart-app, or main component), hence we use @Output
-  //Output no longer needed because we use a router.
-  productEventEmitter: EventEmitter<Product> = new EventEmitter();
-
-  constructor(private router: Router) {
+  constructor(private SharingDataService: SharingDataService, private router: Router) {
     this.products = this.router.currentNavigation()?.extras.state!['products'];
   }
 
   onAddCart(product: Product) {
-    this.productEventEmitter.emit(product);
+    this.SharingDataService.productEventEmitter.emit(product);
   }
 
 }

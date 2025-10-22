@@ -32,29 +32,33 @@ export class CartAppComponent implements OnInit {
     this.calculateTotal();
     //ngOnInit doesn't execute this method, it only subscribes to the service to listen to any ID call.
     this.onDeleteCart();
+    //we subscribe to this method in order to listen to the event of adding a product.
+    this.onAddCart();
   }
 
   //Method that finally adds the new product to the existing array of Products, which is the cart
   // (called 'items' in this case).
   //If the product exists already, increases the quantity by 1. Otherwise, it is added to the list.
-  onAddCart(product: Product): void {
-    const hasItem = this.items.find(item => item.product.id === product.id);
-    if (hasItem) {
-      //The map() function returns a new instance of the array, but modified
-      this.items = this.items.map(item => {
-        if (item.product.id === product.id) {
-          return {
-            ...item,
-            quantity: item.quantity + 1
+  onAddCart(): void {
+    this.SharingDataService.productEventEmitter.subscribe(product => {
+      const hasItem = this.items.find(item => item.product.id === product.id);
+      if (hasItem) {
+        //The map() function returns a new instance of the array, but modified
+        this.items = this.items.map(item => {
+          if (item.product.id === product.id) {
+            return {
+              ...item,
+              quantity: item.quantity + 1
+            }
           }
-        }
-        return item;
-      })
-    } else {
-      this.items = [... this.items, { product: { ...product }, quantity: 1 }];
-    }
-    this.calculateTotal();
-    this.saveSession();
+          return item;
+        })
+      } else {
+        this.items = [... this.items, { product: { ...product }, quantity: 1 }];
+      }
+      this.calculateTotal();
+      this.saveSession();
+    });
   }
 
   //The filter() function creates a new instance of the array
