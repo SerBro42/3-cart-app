@@ -13,6 +13,7 @@
         <li class="nav-item">
           <a
           [routerLink]="['/cart']"
+          [state]="{items: items, totla: totla}"
           class="nav-link btn btn-link"
           role="button"
           aria-label="Open cart">Cart ({{items.length}})</a>

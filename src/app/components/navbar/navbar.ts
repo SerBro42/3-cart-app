@@ -12,4 +12,6 @@ export class NavbarComponent {
   //The data regarding the cart item array comes from a parent component, hence we use @Input.
   @Input() items: CartItem[] = [];
 
+  @Input() totla: number = 0;
+
 }
