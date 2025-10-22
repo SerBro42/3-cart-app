@@ -5,6 +5,7 @@ import { CatalogueComponent } from './catalogue/catalogue';
 import { CartItem } from '../models/cartItem';
 import { NavbarComponent } from './navbar/navbar';
 import { RouterOutlet } from '@angular/router';
+import { SharingDataService } from '../services/sharing-data';
 
 @Component({
   selector: 'cart-app',
@@ -19,7 +20,7 @@ export class CartAppComponent implements OnInit {
 
   total: number = 0;
 
-  constructor(private service: ProductService) {
+  constructor(private SharingDataService: SharingDataService, private service: ProductService) {
 
   }
 
@@ -29,6 +30,8 @@ export class CartAppComponent implements OnInit {
     this.products = this.service.findAll();
     this.items = JSON.parse(sessionStorage.getItem('cart') || '[]');
     this.calculateTotal();
+    //ngOnInit doesn't execute this method, it only subscribes to the service to listen to any ID call.
+    this.onDeleteCart();
   }
 
   //Method that finally adds the new product to the existing array of Products, which is the cart
@@ -58,13 +61,17 @@ export class CartAppComponent implements OnInit {
   //We need to explicitly clear the object 'cart' from sessionStorage after reaching length=0, because
   //otherwise, if we delete the last element and refresh the page, the last element of the list before deletion persists. The reason
   //being that the initial state of the object is [], and so leaving it at [] is not considered as a 'change'.
-  onDeleteCart(id: number): void {
-    this.items = this.items.filter(item => item.product.id !== id);
-    if(this.items.length == 0) {
-      sessionStorage.removeItem('cart');
-    }
-    this.calculateTotal();
-    this.saveSession();
+  //We created a service for sharing data, and so we subscribe to that service to get our product ID.
+  onDeleteCart(): void {
+    this.SharingDataService.idProductEventEmitter.subscribe( id => {
+      console.log(id + ' executing event idProductEventEmitter');
+      this.items = this.items.filter(item => item.product.id !== id);
+      if(this.items.length == 0) {
+        sessionStorage.removeItem('cart');
+      }
+      this.calculateTotal();
+      this.saveSession();
+    });
   }
 
   // //The reduce() funcition reduces a data flux into a single variable. In this case, we use a 'for' to iterate
