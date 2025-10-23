@@ -28,7 +28,6 @@ export class CartAppComponent implements OnInit {
   //When the application gets initialised, the product service that was previously initialised gets called
   //and populates our empty Product array with products returned by the service
   ngOnInit(): void {
-    this.products = this.service.findAll();
     this.items = JSON.parse(sessionStorage.getItem('cart') || '[]');
     this.calculateTotal();
     //ngOnInit doesn't execute this method, it only subscribes to the service to listen to any ID call.
