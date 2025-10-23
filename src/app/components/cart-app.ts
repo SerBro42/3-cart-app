@@ -6,6 +6,7 @@ import { CartItem } from '../models/cartItem';
 import { NavbarComponent } from './navbar/navbar';
 import { Router, RouterOutlet } from '@angular/router';
 import { SharingDataService } from '../services/sharing-data';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'cart-app',
@@ -61,6 +62,12 @@ export class CartAppComponent implements OnInit {
       this.router.navigate(['/cart'], {
         state: { items: this.items, total: this.total }
       })
+
+      Swal.fire({
+        title: "Da Shopping",
+        text: "Article added to the cart",
+        icon: "success"
+      });
     });
   }
 
@@ -70,21 +77,43 @@ export class CartAppComponent implements OnInit {
   //being that the initial state of the object is [], and so leaving it at [] is not considered as a 'change'.
   //We created a service for sharing data, and so we subscribe to that service to get our product ID.
   onDeleteCart(): void {
-    this.SharingDataService.idProductEventEmitter.subscribe( id => {
+    this.SharingDataService.idProductEventEmitter.subscribe(id => {
       console.log(id + ' executing event idProductEventEmitter');
-      this.items = this.items.filter(item => item.product.id !== id);
-      if(this.items.length == 0) {
-        sessionStorage.removeItem('cart');
-      }
-      this.calculateTotal();
-      this.saveSession();
 
-      this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-        //This does NOT refresh the window after deleting
-        this.router.navigate(['/cart'], {
-          state: { items: this.items, total: this.total }
-        })
-      })
+      Swal.fire({
+        title: "Confirm delete article",
+        text: "Are you sure you wish to remove this article from the cart?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+      }).then((result) => {
+        if (result.isConfirmed) {
+
+          this.items = this.items.filter(item => item.product.id !== id);
+          if (this.items.length == 0) {
+            sessionStorage.removeItem('cart');
+          }
+          this.calculateTotal();
+          this.saveSession();
+
+          this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+            //This does NOT refresh the window after deleting
+            this.router.navigate(['/cart'], {
+              state: { items: this.items, total: this.total }
+            })
+          })
+
+          Swal.fire({
+            title: "Deleted!",
+            text: "Article removed from the shopping cart",
+            icon: "success"
+          });
+        }
+      });
+
+
     })
   }
 
