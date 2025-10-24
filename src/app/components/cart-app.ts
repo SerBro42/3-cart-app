@@ -30,7 +30,7 @@ export class CartAppComponent implements OnInit {
   //and populates our empty Product array with products returned by the service
   ngOnInit(): void {
     this.items = JSON.parse(sessionStorage.getItem('cart') || '[]');
-    this.calculateTotal();
+    //this.calculateTotal();
     //ngOnInit doesn't execute this method, it only subscribes to the service to listen to any ID call.
     this.onDeleteCart();
     //we subscribe to this method in order to listen to the event of adding a product.
@@ -42,22 +42,8 @@ export class CartAppComponent implements OnInit {
   //If the product exists already, increases the quantity by 1. Otherwise, it is added to the list.
   onAddCart(): void {
     this.SharingDataService.productEventEmitter.subscribe(product => {
-      const hasItem = this.items.find(item => item.product.id === product.id);
-      if (hasItem) {
-        //The map() function returns a new instance of the array, but modified
-        this.items = this.items.map(item => {
-          if (item.product.id === product.id) {
-            return {
-              ...item,
-              quantity: item.quantity + 1
-            }
-          }
-          return item;
-        })
-      } else {
-        this.items = [... this.items, { product: { ...product }, quantity: 1 }];
-      }
-      this.calculateTotal();
+
+      //this.calculateTotal();
       this.saveSession();
       this.router.navigate(['/cart'], {
         state: { items: this.items, total: this.total }
@@ -91,9 +77,7 @@ export class CartAppComponent implements OnInit {
       }).then((result) => {
         if (result.isConfirmed) {
 
-          this.items = this.items.filter(item => item.product.id !== id);
-
-          this.calculateTotal();
+          //this.calculateTotal();
           this.saveSession();
 
           this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
@@ -113,12 +97,6 @@ export class CartAppComponent implements OnInit {
 
 
     })
-  }
-
-  // //The reduce() funcition reduces a data flux into a single variable. In this case, we use a 'for' to iterate
-  // //through all the items and their price value, and return a single variable that is the sum of all previous ones.
-  calculateTotal(): void {
-    this.total = this.items.reduce((accumulator, item) => accumulator + item.quantity * item.product.price, 0);
   }
 
   // //We save the array of products in our session storage. Challenge: data are saved in session storage is saved in form of
