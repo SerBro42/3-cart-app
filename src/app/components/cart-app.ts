@@ -31,13 +31,14 @@ export class CartAppComponent implements OnInit {
       this.store.select('items').subscribe(state => {
         this.items = state.items;
         this.total = state.total;
+        this.saveSession();
+        console.log('state changed');
       })
      }
 
   //When the application gets initialised, the product service that was previously initialised gets called
   //and populates our empty Product array with products returned by the service
   ngOnInit(): void {
-    this.store.dispatch(total());
     //ngOnInit doesn't execute this method, it only subscribes to the service to listen to any ID call.
     this.onDeleteCart();
     //we subscribe to this method in order to listen to the event of adding a product.
@@ -54,7 +55,6 @@ export class CartAppComponent implements OnInit {
       this.store.dispatch(add({ product: product }));
       this.store.dispatch(total());
 
-      this.saveSession();
       this.router.navigate(['/cart'], {
         state: { items: this.items, total: this.total }
       })
@@ -90,7 +90,6 @@ export class CartAppComponent implements OnInit {
           //By means of dispatch, we call upon the remove action, saved in our 'actions' file.
           this.store.dispatch(remove({id: id}));
           this.store.dispatch(total());
-          this.saveSession();
 
           this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
             //This does NOT refresh the window after deleting
