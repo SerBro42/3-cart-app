@@ -5,6 +5,8 @@ import { routes } from './app.routes';
 import { provideStore } from '@ngrx/store';
 import { itemsReducer } from './store/items.reducer';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
+import { products } from './data/product.data';
+import { productsReducer } from './store/products.reducer';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -13,6 +15,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideStore({
         items: itemsReducer,
+        products: productsReducer
     }),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() })
 ]
