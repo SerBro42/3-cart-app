@@ -7,6 +7,9 @@ import { NavbarComponent } from './navbar/navbar';
 import { Router, RouterOutlet } from '@angular/router';
 import { SharingDataService } from '../services/sharing-data';
 import Swal from 'sweetalert2';
+import { ItemsState } from '../store/items.reducer';
+import { Store } from '@ngrx/store';
+import { add, remove, total } from '../store/items.actions';
 
 @Component({
   selector: 'cart-app',
@@ -22,15 +25,19 @@ export class CartAppComponent implements OnInit {
   total: number = 0;
 
   constructor(
+    private store: Store<{items: ItemsState}>,
     private router: Router,
-    private SharingDataService: SharingDataService,
-    private service: ProductService) { }
+    private SharingDataService: SharingDataService) {
+      this.store.select('items').subscribe(state => {
+        this.items = state.items;
+        this.total = state.total;
+      })
+     }
 
   //When the application gets initialised, the product service that was previously initialised gets called
   //and populates our empty Product array with products returned by the service
   ngOnInit(): void {
-    this.items = JSON.parse(sessionStorage.getItem('cart') || '[]');
-    //this.calculateTotal();
+    this.store.dispatch(total());
     //ngOnInit doesn't execute this method, it only subscribes to the service to listen to any ID call.
     this.onDeleteCart();
     //we subscribe to this method in order to listen to the event of adding a product.
@@ -43,7 +50,10 @@ export class CartAppComponent implements OnInit {
   onAddCart(): void {
     this.SharingDataService.productEventEmitter.subscribe(product => {
 
-      //this.calculateTotal();
+      //By means of dispatch we call upon the "add" action, declared in our 'actions' file
+      this.store.dispatch(add({ product: product }));
+      this.store.dispatch(total());
+
       this.saveSession();
       this.router.navigate(['/cart'], {
         state: { items: this.items, total: this.total }
@@ -71,13 +81,15 @@ export class CartAppComponent implements OnInit {
         text: "Are you sure you wish to remove this article from the cart?",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
         confirmButtonText: "Yes, delete it!"
       }).then((result) => {
         if (result.isConfirmed) {
 
-          //this.calculateTotal();
+          //By means of dispatch, we call upon the remove action, saved in our 'actions' file.
+          this.store.dispatch(remove({id: id}));
+          this.store.dispatch(total());
           this.saveSession();
 
           this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
