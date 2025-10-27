@@ -36,6 +36,7 @@ export class CartAppComponent implements OnInit {
   //When the application gets initialised, the product service that was previously initialised gets called
   //and populates our empty Product array with products returned by the service
   ngOnInit(): void {
+    this.store.dispatch(total());
     //ngOnInit doesn't execute this method, it only subscribes to the service to listen to any ID call.
     this.onDeleteCart();
     //we subscribe to this method in order to listen to the event of adding a product.
