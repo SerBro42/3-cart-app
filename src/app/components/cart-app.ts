@@ -22,19 +22,16 @@ export class CartAppComponent implements OnInit {
 
   items: CartItem[] = [];
 
-  total: number = 0;
-
   constructor(
-    private store: Store<{items: ItemsState}>,
+    private store: Store<{ items: ItemsState }>,
     private router: Router,
     private SharingDataService: SharingDataService) {
-      this.store.select('items').subscribe(state => {
-        this.items = state.items;
-        this.total = state.total;
-        this.saveSession();
-        console.log('state changed');
-      })
-     }
+    this.store.select('items').subscribe(state => {
+      this.items = state.items;
+      this.saveSession();
+      console.log('state changed');
+    })
+  }
 
   //When the application gets initialised, the product service that was previously initialised gets called
   //and populates our empty Product array with products returned by the service
@@ -55,9 +52,7 @@ export class CartAppComponent implements OnInit {
       this.store.dispatch(add({ product: product }));
       this.store.dispatch(total());
 
-      this.router.navigate(['/cart'], {
-        state: { items: this.items, total: this.total }
-      })
+      this.router.navigate(['/cart']);
 
       Swal.fire({
         title: "Da Shopping",
@@ -88,15 +83,10 @@ export class CartAppComponent implements OnInit {
         if (result.isConfirmed) {
 
           //By means of dispatch, we call upon the remove action, saved in our 'actions' file.
-          this.store.dispatch(remove({id: id}));
+          this.store.dispatch(remove({ id: id }));
           this.store.dispatch(total());
 
-          this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-            //This does NOT refresh the window after deleting
-            this.router.navigate(['/cart'], {
-              state: { items: this.items, total: this.total }
-            })
-          })
+          this.router.navigate(['/cart']);
 
           Swal.fire({
             title: "Deleted!",
@@ -105,8 +95,6 @@ export class CartAppComponent implements OnInit {
           });
         }
       });
-
-
     })
   }
 
