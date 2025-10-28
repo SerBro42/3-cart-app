@@ -57,3 +57,8 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+## State Management diagram in Angular with NgRx
+
+<img width="1400" height="788" alt="R" src="https://github.com/user-attachments/assets/e3cfa224-3f0f-4481-9e7d-c142e0e41988" />
+
